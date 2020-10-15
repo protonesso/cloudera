@@ -1,9 +1,21 @@
 CC = clang
 HOSTCC = clang
-LD = ld
+LD = ld.lld
+STRIP = llvm-strip
 
-CFLAGS = -m32 -mno-red-zone -nostdlib
-ASMFLAGS = -m32
+COMMON_FLAGS = -Qunused-arguments \
+		-D_FORTIFY_SOURCE=2 \
+		-fstack-protector-all \
+		-fstack-clash-protection \
+		-fcf-protection=full \
+		-fsanitize=safe-stack \
+		-Wl,-z,relro,-z,now \
+		-Wformat -Wformat-security \
+		-Werror=format-security \
+		-m32
+CFLAGS = $(COMMON_FLAGS) -mno-red-zone -nostdlib
+ASMFLAGS = $(COMMON_FLAGS)
+STRIPFLAGS = -g -s
 
 OUTPUT = $(PWD)/out
 SRC = $(PWD)/src
@@ -28,3 +40,4 @@ create_build: clean
 
 cloudera: $(OBJS)
 	$(LD) -m elf_i386 -T $(SRC)/boot.link -o $(OUTPUT)/$@ $(OBJS)
+	$(STRIP) $(STRIPFLAGS) $(OUTPUT)/$@

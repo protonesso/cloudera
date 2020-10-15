@@ -5,32 +5,32 @@ SECTIONS {
 	. = 1M;
 
 	/* Put multiboot header */
-	.text BLOCK(4K) : ALIGN(4K)
+	.text :
 	{
 		*(.multiboot)
 		*(.text)
 	}
 
 	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata :
 	{
 		*(.rodata)
 	}
 
 	/* Read-write data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
+	.data :
 	{
 		*(.data)
 	}
 
 	/* gcc's eh */
-	.eh_frame BLOCK(4K) : ALIGN(4K)
+	.eh_frame :
 	{
 		*(.eh_frame)
 	}
 
 	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss :
 	{
 		*(COMMON)
 		*(.bss)
